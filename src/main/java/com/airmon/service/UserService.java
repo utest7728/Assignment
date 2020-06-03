@@ -5,7 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +26,9 @@ import com.airmon.entity.UserRegistrationError;
 import com.airmon.repository.ErrorRepository;
 import com.airmon.repository.RoleRepository;
 import com.airmon.repository.UserRepository;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
 @Service
 public class UserService implements IUserService {
@@ -34,8 +40,8 @@ public class UserService implements IUserService {
 	private RoleRepository roleRepository;
 
 	@Autowired
-	ErrorRepository errorRepository;
-
+	private ErrorRepository errorRepository;
+	
 	
 	@Override
 	@Transactional
@@ -52,9 +58,10 @@ public class UserService implements IUserService {
 		User user = null;
 
 		for (UserRegistrationDto userRegistrationDto : userRegistrationDtoList) {
-
-			if (user != userRepository.findByUsername(userRegistrationDto.getUsername())) {
-				UserRegistrationError userRegistrationError = new UserRegistrationError(
+			UserRegistrationError userRegistrationError= null;
+			user= userRepository.findByUsername(userRegistrationDto.getUsername());
+			if (user != null) {
+				 userRegistrationError = new UserRegistrationError(
 						userRegistrationDto.getUsername(), userRegistrationDto.getPassword(),
 						userRegistrationDto.getFirstName(), userRegistrationDto.getLastName(),
 						userRegistrationDto.getEmail(), "User Already exists");
@@ -70,6 +77,32 @@ public class UserService implements IUserService {
 				// user.setUsername(userRegistrationDto.getEmail());
 				user.setEmail(userRegistrationDto.getEmail());
 				user.setPassword(userRegistrationDto.getPassword());
+				
+				if(!userRegistrationDto.getPassword().equals( userRegistrationDto.getConfirmPassword())) {
+					userRegistrationError = new UserRegistrationError(
+							userRegistrationDto.getUsername(), userRegistrationDto.getPassword(),
+							userRegistrationDto.getFirstName(), userRegistrationDto.getLastName(),
+							userRegistrationDto.getEmail(), "Password and Confirm Password didn't Match");
+
+					errorRepository.save(userRegistrationError);
+					userInsertionFailed++;
+					continue;
+				}
+					
+				
+				String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+				if(!userRegistrationDto.getEmail().matches(emailRegex)) {
+					userRegistrationError = new UserRegistrationError(
+							userRegistrationDto.getUsername(), userRegistrationDto.getPassword(),
+							userRegistrationDto.getFirstName(), userRegistrationDto.getLastName(),
+							userRegistrationDto.getEmail(), "Email is Invalid");
+
+					errorRepository.save(userRegistrationError);
+					userInsertionFailed++;
+					continue;
+					
+				}
+				
 
 				List<Role> roles = new ArrayList<Role>();
 
@@ -85,7 +118,7 @@ public class UserService implements IUserService {
 					userInsertionSuccess++;
 				} catch (Exception e) {
 
-					UserRegistrationError userRegistrationError = new UserRegistrationError(
+					 userRegistrationError = new UserRegistrationError(
 							userRegistrationDto.getUsername(), userRegistrationDto.getPassword(),
 							userRegistrationDto.getFirstName(), userRegistrationDto.getLastName(),
 							userRegistrationDto.getEmail(), e.getMessage());
@@ -96,28 +129,28 @@ public class UserService implements IUserService {
 				}
 			} // else
 		} // for
-		return new ResponseEntity<ResponseBulkDto>(new ResponseBulkDto(totalUserParsed, userInsertionFailed),
+		return new ResponseEntity<ResponseBulkDto>(new ResponseBulkDto(totalUserParsed, userInsertionFailed,
+				"RegistrationErorrs.csv"),
 				HttpStatus.OK);
 	}
 
-	@Transactional
-	public User register(UserRegistrationDto userRegistrationDto) {
+	@Override
+	public void exportCSV(HttpServletResponse response) throws Exception {
 
-		User user = new User();
-		user.setFirstName(userRegistrationDto.getFirstName());
-		user.setLastName(userRegistrationDto.getLastName());
-		// user.setUsername(userRegistrationDto.getUsername());
-		user.setUsername(userRegistrationDto.getEmail());
-		user.setEmail(userRegistrationDto.getEmail());
-		user.setPassword(userRegistrationDto.getPassword());
+        String filename = "error.csv";
 
-		List<Role> roles = new ArrayList<Role>();
-		roles.add(roleRepository.findByRollName("ROLL_USER"));
-		user.setRoles(roles);
+        response.setContentType("text/csv");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + filename + "\"");
 
-		return userRepository.save(user);
+        StatefulBeanToCsv<UserRegistrationError> writer = new StatefulBeanToCsvBuilder<UserRegistrationError>(response.getWriter())
+                .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
+                .withOrderedResults(false)
+                .build();
 
-	}
+        writer.write(errorRepository.findAll());
+                
+    }
 
 	@Override
 	@Transactional
@@ -133,4 +166,6 @@ public class UserService implements IUserService {
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
 		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 	}
+
+	
 }

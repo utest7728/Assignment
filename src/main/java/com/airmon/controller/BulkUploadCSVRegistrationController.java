@@ -6,10 +6,10 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,15 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.airmon.dto.Constants;
 import com.airmon.dto.ResponseDto;
 import com.airmon.dto.UserRegistrationDto;
-import com.airmon.entity.UserRegistrationError;
+import com.airmon.entity.Role;
 import com.airmon.repository.ErrorRepository;
+import com.airmon.repository.RoleRepository;
 import com.airmon.repository.UserRepository;
 import com.airmon.service.IUserService;
-import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
 @Controller
 public class BulkUploadCSVRegistrationController {
@@ -42,9 +40,12 @@ public class BulkUploadCSVRegistrationController {
 	@Autowired
 	ErrorRepository errorRepository;
 	
+	@Autowired
+	RoleRepository roleRepository;
+	
 	 List<ResponseDto> responseDtoList = new ArrayList<ResponseDto>();
 	
-    @PostMapping("/bulkRegisterCsv")
+    @PostMapping("/register")
 	public ResponseEntity<?> uploadCSVFile(@RequestParam("file") MultipartFile file) {
     	List<UserRegistrationDto> userRegistrationDtoList = null;
         
@@ -71,5 +72,21 @@ public class BulkUploadCSVRegistrationController {
          return userService.bulkRegister(userRegistrationDtoList);
     }
     
+    
+    @GetMapping("/download/{file}")
+    public void exportCSV(HttpServletResponse response) throws Exception {
+
+    	userService.exportCSV(response);
+                
+    }
+    
+    @PostConstruct
+	public void insertingRoles() {
+		
+		roleRepository.save(new Role("ROLE_USER"));
+		roleRepository.save(new Role("ROLE_ADMIN"));
+		roleRepository.save(new Role("ROLE_SUPERADMIN"));
+		
+	}
     
 }

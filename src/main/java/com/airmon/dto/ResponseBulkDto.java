@@ -17,10 +17,10 @@ public class ResponseBulkDto {
 	public ResponseBulkDto() {
 	}
 	
-	public ResponseBulkDto(int no_of_rows_parsed, int no_of_rows_failed) {
+	public ResponseBulkDto(int no_of_rows_parsed, int no_of_rows_failed, String filename) {
 		this.no_of_rows_parsed = no_of_rows_parsed;
 		this.no_of_rows_failed = no_of_rows_failed;
-		this.error_file_url = "";
+		this.error_file_url = "localhost:8080/download/" + filename;
 	}
 
 	public int getNo_of_rows_parsed() {
@@ -39,7 +39,8 @@ public class ResponseBulkDto {
 		this.no_of_rows_failed = no_of_rows_failed;
 	}
 
-	public String isError_file_url() {
+
+	public String getError_file_url() {
 		return error_file_url;
 	}
 

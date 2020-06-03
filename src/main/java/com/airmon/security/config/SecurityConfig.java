@@ -32,12 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.csrf().disable()
 		.authorizeRequests()
-			.antMatchers("/","/register","/hello","/bulkRegisterCsv").permitAll()
-			.
+			.antMatchers("/register","/download/{file}").permitAll()
 			// all other requests need to be authenticated
-			anyRequest().authenticated();
-		
-
+			.anyRequest().authenticated();
+				
 	}
 
        
