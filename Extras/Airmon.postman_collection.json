@@ -1,0 +1,129 @@
+{
+	"id": "0e2bfb7f-d3fc-aecf-9b5a-1dda8eab3de2",
+	"name": "Airmon",
+	"description": "",
+	"order": [
+		"0f069236-77e3-0763-bdfb-5de2f379cee6",
+		"43c785be-9964-783e-90fe-869a1cb4ff11",
+		"1723f69b-ef32-9330-da62-b1a3584d3e20",
+		"140ee442-5c95-d31c-95c6-82410c7ab545"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1591023790752,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "0f069236-77e3-0763-bdfb-5de2f379cee6",
+			"headers": "",
+			"headerData": [],
+			"url": "localhost:8080/airmon/hello",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1591172145295,
+			"name": "test",
+			"description": "",
+			"collectionId": "0e2bfb7f-d3fc-aecf-9b5a-1dda8eab3de2",
+			"responses": []
+		},
+		{
+			"id": "140ee442-5c95-d31c-95c6-82410c7ab545",
+			"headers": "",
+			"headerData": [],
+			"url": "localhost:8080/airmon/download/RegistrationErorrs.csv",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1591172137500,
+			"name": "download",
+			"description": "",
+			"collectionId": "0e2bfb7f-d3fc-aecf-9b5a-1dda8eab3de2",
+			"responses": []
+		},
+		{
+			"id": "1723f69b-ef32-9330-da62-b1a3584d3e20",
+			"headers": "//Content-Type: multipart/form-data\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "multipart/form-data",
+					"description": "",
+					"enabled": false
+				}
+			],
+			"url": "localhost:8080/airmon/register",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [
+				{
+					"key": "file",
+					"value": "userWithRoles.csv",
+					"description": "",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1591172134378,
+			"name": "bulkRegisterCsv",
+			"description": "",
+			"collectionId": "0e2bfb7f-d3fc-aecf-9b5a-1dda8eab3de2",
+			"responses": []
+		},
+		{
+			"id": "43c785be-9964-783e-90fe-869a1cb4ff11",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/airmon/register",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1591172141199,
+			"name": "register",
+			"description": "",
+			"collectionId": "0e2bfb7f-d3fc-aecf-9b5a-1dda8eab3de2",
+			"responses": [],
+			"rawModeData": "{\n\t\"firstName\":\"firstname\",\n\t\"lastName\":\"lastname\",\n\t\"password\":\"test\",\n\t\"confirmPassword\":\"test\",\n\t\"username\":\"test\",\n\t\"email\":\"email@email.com\"\n\n}"
+		}
+	]
+}

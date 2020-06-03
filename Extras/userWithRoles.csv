@@ -1,0 +1,6 @@
+firstName,lastName,password,confirmPassword,username,email,roles
+ram,dhyani,test,test,ram,ram@gmail.com,ROLE_USER
+shyam,kumar,test,test,shyam,shyam@gmail.com,ROLE_USER
+naina,singh,test,test1,naina,naina@gmail.com,ROLE_USER
+aashi,rawat,test,test,aashi,aashi@gmail.com,ROLE_USER
+twinkle,kashyap,test,test,twinkle,twinkle.com,ROLE_ADMIN | ROLE_USER
