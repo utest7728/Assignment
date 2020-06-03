@@ -24,6 +24,7 @@ public class UserRegistrationDto{
     @NotEmpty
     private String email;
     
+    String roles;
 	
 	public UserRegistrationDto() {
 	}
@@ -87,13 +88,27 @@ public class UserRegistrationDto{
 		this.email = email;
 	}
 
+	public String getRoles() {
+		return roles;
+	}
+
+	public void setRoles(String roles) {
+		this.roles = roles;
+	}
 
 	@Override
 	public String toString() {
 		return "UserRegistrationDto [firstName=" + firstName + ", lastName=" + lastName + ", password=" + password
-				+ ", confirmPassword=" + confirmPassword + ", username=" + username + ", email=" + email
-				+  "]";
+				+ ", confirmPassword=" + confirmPassword + ", username=" + username + ", email=" + email + ", roles="
+				+ roles + "]";
 	}
+
+	
+
+
+	
+
+	
 
 
 }

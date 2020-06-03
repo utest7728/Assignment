@@ -21,6 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private IUserService userService;
 
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider());
@@ -31,10 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.csrf().disable()
 		.authorizeRequests()
-			.antMatchers("/","/register","/hello").permitAll()
+			.antMatchers("/","/register","/hello","/bulkRegisterCsv").permitAll()
 			.
 			// all other requests need to be authenticated
 			anyRequest().authenticated();
+		
 
 	}
 

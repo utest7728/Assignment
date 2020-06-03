@@ -33,7 +33,6 @@ public class RegistrationController {
 	public ResponseEntity<?> hello() {
 		
        return new ResponseEntity<ResponseDto>(new ResponseDto(Constants.SUCCESS_CODE , "Application Started" , false ,null), HttpStatus.OK);
-        
 		
 	}
 	
@@ -55,8 +54,6 @@ public class RegistrationController {
         
        user = userService.register(userRegistrationDto);
        return new ResponseEntity<ResponseDto>(new ResponseDto(Constants.SUCCESS_CODE , "User Registered Successfully." , false ,user), HttpStatus.OK);
-	
-       
 	}
 	
 	@PostConstruct

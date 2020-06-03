@@ -1,5 +1,8 @@
 package com.airmon.service;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.airmon.dto.UserRegistrationDto;
@@ -11,5 +14,6 @@ public interface IUserService extends UserDetailsService {
 
 	User register(UserRegistrationDto userRegistrationDto);
 
+	ResponseEntity<?> bulkRegister(List<UserRegistrationDto> userRegistrationDtoList);
     
 }
